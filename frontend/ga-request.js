@@ -2,11 +2,16 @@ document.querySelector('#send-request').addEventListener('click', () => {
   sendGARequest();
 })
 
+
+
 //const apiUrl = "http://stud-learn.usm.md:3000";
   const apiUrl = "http://localhost:3000";  
 let jobID = NaN;
 
 let gotResp = false;
+
+let sendFunction = false;
+
 
 async function sendGARequest() {
   const inputTime = document.getElementById('input-time');
@@ -129,6 +134,8 @@ fetch(`${apiUrl}/api/optimize`, {
 .then(response => response.json())
 .then(result => {
   console.log('Успешно отправлено:', result);
+  jobID = result.jobId;
+  sendFunction =true;
 })
 .catch(error => {
   console.error('Ошибка при отправке:', error);
@@ -148,31 +155,45 @@ if (!resultResponse.ok) {
 */
 let pollingIntervalId;
 
-/*
+
 function startPolling() {
-  if (gotResp) return;
+
 
   pollingIntervalId = setInterval(async () => {
+  if (sendFunction){
     try {
+      
       const response = await fetch(`${apiUrl}/api/optimize/result/${jobID}`);
-
+      
       if (!response.ok) {
         throw new Error(`Ошибка HTTP: ${response.status}`);
       }
 
       const result = await response.json();
       console.log('Обновлённые данные:', result);
+      gotResp = true;
+      
+const outputArea = document.querySelector('textarea[name="ga_output"]');
+    if (result.message) {
+      outputArea.value = result.message;
+    } else {
+      outputArea.value = JSON.stringify(result, null, 2);
+    }
 
       if (result.status === "done" && result.id) {
-        gotResp = true;
+        sendFunction = false;
         clearInterval(pollingIntervalId); // Остановить опрос
         console.log('Опрос завершён. Получен ID:', result.id);
+        
       }
 
     } catch (error) {
       console.error('Ошибка при опросе сервера:', error);
     }
-  }, 1000); // каждые 1 сек
+  }}, 1000); // каждые 1 сек
 }
-startPolling();
-*/
+
+
+
+  startPolling();
+

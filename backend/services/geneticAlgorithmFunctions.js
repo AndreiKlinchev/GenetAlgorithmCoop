@@ -20,7 +20,11 @@ export function newGeniration(priviosGenerationBests) {
     //console.log("Is chengeing")
     let randomFromGeneration = Math.floor(Math.random() * newGenerationInBinar.length);
     //console.log(`Index${randomFromGeneration}, What${newGenerationInBinar[randomFromGeneration]}`)
-    newGenerationInBinar[randomFromGeneration] = binarChengebility(newGenerationInBinar[randomFromGeneration]);
+    let changedNum;
+   
+    changedNum = binarChengebility(newGenerationInBinar[randomFromGeneration]);
+  
+    newGenerationInBinar[randomFromGeneration] = changedNumm;
     //console.log(`After change: ${newGenerationInBinar[randomFromGeneration]}`);
   }
 
